@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fórmula utilizada para el cálculo del tamaño muestral</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.4em;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #resultado {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fórmula utilizada para el cálculo del tamaño muestral<br>Autor: Je@n Zapata</h1>
+
+    <label for="N">Tamaño de la población (N):</label>
+    <input type="number" id="N" placeholder="Ejemplo: 1000">
+
+    <button onclick="calcularMuestra()">Calcular tamaño de la muestra</button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    function calcularMuestra() {
+      const N = parseFloat(document.getElementById("N").value);
+      const Z = 1.96; // Nivel de confianza 95%
+      const p = 0.5;
+      const q = 1 - p;
+      const e = 0.05;
+
+      if (isNaN(N) || N <= 0) {
+        document.getElementById("resultado").innerText = "Por favor, ingrese un tamaño de población válido.";
+        return;
+      }
+
+      const numerador = N * Math.pow(Z, 2) * p * q;
+      const denominador = Math.pow(e, 2) * (N - 1) + Math.pow(Z, 2) * p * q;
+      const n = numerador / denominador;
+
+      document.getElementById("resultado").innerText = `Tamaño de la muestra requerido: ${Math.ceil(n)} participantes.`;
+    }
+  </script>
+</body>
+</html>
