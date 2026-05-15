@@ -1,84 +1,466 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fórmula utilizada para el cálculo del tamaño muestral</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Tamaño Muestral | Jean Zapata</title>
   <style>
+    :root {
+      --bg: #eef3f8;
+      --card: #ffffff;
+      --primary: #0f4c81;
+      --primary-dark: #0a365c;
+      --accent: #1f7a8c;
+      --text: #1f2933;
+      --muted: #64748b;
+      --border: #d9e2ec;
+      --success: #0f766e;
+      --warning: #b45309;
+      --danger: #b91c1c;
+      --shadow: 0 18px 45px rgba(15, 76, 129, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      padding: 20px;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top left, #dbeafe 0, var(--bg) 38%, #f8fafc 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
     }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
     }
-    h1 {
+
+    .hero {
       text-align: center;
-      font-size: 1.4em;
+      margin-bottom: 24px;
+      padding: 16px;
     }
+
+    .badge {
+      display: inline-block;
+      background: rgba(31, 122, 140, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(31, 122, 140, 0.25);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      color: var(--primary-dark);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.04rem;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 16px;
+      color: var(--primary-dark);
+      font-size: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
     label {
       display: block;
-      margin-top: 15px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 7px;
     }
-    input[type="number"] {
-      width: 100%;
-      padding: 10px;
+
+    .hint {
+      display: block;
+      color: var(--muted);
+      font-size: 0.86rem;
       margin-top: 5px;
+      line-height: 1.35;
     }
-    button {
-      margin-top: 20px;
+
+    input,
+    select {
       width: 100%;
-      padding: 10px;
-      background: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 12px 13px;
+      font-size: 1rem;
+      color: var(--text);
+      background: #ffffff;
+      outline: none;
+      transition: 0.2s ease;
     }
-    #resultado {
-      margin-top: 20px;
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(31, 122, 140, 0.12);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 15px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      box-shadow: 0 12px 22px rgba(15, 76, 129, 0.25);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(15, 76, 129, 0.32);
+    }
+
+    button.secondary {
+      margin-top: 10px;
+      background: #e2e8f0;
+      color: #334155;
+      box-shadow: none;
+    }
+
+    .result-box {
+      border-radius: 20px;
+      padding: 22px;
+      background: linear-gradient(180deg, #f0fdfa, #ffffff);
+      border: 1px solid #99f6e4;
       text-align: center;
-      font-weight: bold;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .result-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .result-number {
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      font-weight: 900;
+      color: var(--success);
+      line-height: 1;
+    }
+
+    .result-text {
+      margin-top: 9px;
+      color: #334155;
+      line-height: 1.45;
+    }
+
+    .formula {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      color: #334155;
+      line-height: 1.55;
+      overflow-x: auto;
+    }
+
+    .formula strong {
+      color: var(--primary-dark);
+    }
+
+    .steps {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 13px;
+      border-radius: 13px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    .step span:first-child {
+      color: var(--muted);
+    }
+
+    .step span:last-child {
+      font-weight: 800;
+      color: #334155;
+      text-align: right;
+    }
+
+    .alert {
+      display: none;
+      margin-bottom: 15px;
+      padding: 12px 14px;
+      border-radius: 13px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--danger);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .note {
+      margin-top: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.92rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 24px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 840px) {
+      body {
+        padding: 14px;
+      }
+
+      .grid,
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 19px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Fórmula utilizada para el cálculo del tamaño muestral<br>Autor: Je@n Zapata</h1>
+  <main class="page">
+    <section class="hero">
+      <span class="badge">Herramienta para investigación científica</span>
+      <h1>Calculadora de tamaño muestral</h1>
+      <p class="subtitle">
+        Estima el tamaño mínimo de muestra para estudios con población finita, permitiendo ajustar nivel de confianza, margen de error y proporción esperada.
+      </p>
+    </section>
 
-    <label for="N">Tamaño de la población (N):</label>
-    <input type="number" id="N" placeholder="Ejemplo: 1000">
+    <section class="grid">
+      <form class="card" id="sampleForm">
+        <h2>Datos del cálculo</h2>
+        <div class="alert" id="alertBox"></div>
 
-    <button onclick="calcularMuestra()">Calcular tamaño de la muestra</button>
+        <div class="form-group">
+          <label for="population">Tamaño de la población (N)</label>
+          <input id="population" type="number" min="1" step="1" placeholder="Ejemplo: 1000" required />
+          <span class="hint">Ingrese el total de unidades de análisis disponibles en la población.</span>
+        </div>
 
-    <div id="resultado"></div>
-  </div>
+        <div class="row">
+          <div class="form-group">
+            <label for="confidence">Nivel de confianza</label>
+            <select id="confidence">
+              <option value="1.645">90%</option>
+              <option value="1.96" selected>95%</option>
+              <option value="2.576">99%</option>
+            </select>
+            <span class="hint">Valor Z asociado al nivel de confianza.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="error">Margen de error (%)</label>
+            <input id="error" type="number" min="0.1" max="50" step="0.1" value="5" required />
+            <span class="hint">Valor usual: 5%. Para mayor precisión, use menor error.</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label for="proportion">Proporción esperada p</label>
+            <input id="proportion" type="number" min="0.01" max="0.99" step="0.01" value="0.5" required />
+            <span class="hint">Use 0.5 cuando se desconoce la proporción esperada.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="loss">Incremento por pérdidas (%)</label>
+            <input id="loss" type="number" min="0" max="80" step="1" value="0" />
+            <span class="hint">Opcional. Útil si se prevé no respuesta o abandono.</span>
+          </div>
+        </div>
+
+        <button type="submit">Calcular tamaño muestral</button>
+        <button class="secondary" type="button" id="resetBtn">Limpiar datos</button>
+      </form>
+
+      <aside class="card">
+        <h2>Resultado</h2>
+        <div class="result-box" id="resultBox">
+          <div class="result-label">Tamaño mínimo de muestra</div>
+          <div class="result-number" id="sampleSize">—</div>
+          <div class="result-text" id="resultText">Complete los datos y presione calcular.</div>
+        </div>
+
+        <div class="steps" id="steps" aria-live="polite"></div>
+
+        <div class="formula">
+          <strong>Fórmula para población finita:</strong><br />
+          n = [N × Z² × p × q] / [e² × (N − 1) + Z² × p × q]
+          <br /><br />
+          Donde: N = población, Z = nivel de confianza, p = proporción esperada, q = 1 − p, e = margen de error.
+        </div>
+
+        <p class="note">
+          Nota metodológica: esta calculadora estima tamaño muestral para proporciones en población finita. Si el estudio requiere comparación de grupos, pruebas de hipótesis, modelos multivariados o diseños complejos, el cálculo debe ajustarse al objetivo estadístico principal.
+        </p>
+      </aside>
+    </section>
+
+    <footer>
+      Desarrollado por Jean Zapata | Calculadora académica de uso referencial
+    </footer>
+  </main>
 
   <script>
-    function calcularMuestra() {
-      const N = parseFloat(document.getElementById("N").value);
-      const Z = 1.96; // Nivel de confianza 95%
-      const p = 0.5;
-      const q = 1 - p;
-      const e = 0.05;
+    const form = document.getElementById('sampleForm');
+    const alertBox = document.getElementById('alertBox');
+    const sampleSize = document.getElementById('sampleSize');
+    const resultText = document.getElementById('resultText');
+    const steps = document.getElementById('steps');
+    const resetBtn = document.getElementById('resetBtn');
 
-      if (isNaN(N) || N <= 0) {
-        document.getElementById("resultado").innerText = "Por favor, ingrese un tamaño de población válido.";
+    function showAlert(message) {
+      alertBox.textContent = message;
+      alertBox.style.display = 'block';
+    }
+
+    function clearAlert() {
+      alertBox.textContent = '';
+      alertBox.style.display = 'none';
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat('es-PE').format(value);
+    }
+
+    function addStep(label, value) {
+      const item = document.createElement('div');
+      item.className = 'step';
+      item.innerHTML = `<span>${label}</span><span>${value}</span>`;
+      steps.appendChild(item);
+    }
+
+    function calculateSample(event) {
+      event.preventDefault();
+      clearAlert();
+      steps.innerHTML = '';
+
+      const N = Number(document.getElementById('population').value);
+      const Z = Number(document.getElementById('confidence').value);
+      const errorPercent = Number(document.getElementById('error').value);
+      const p = Number(document.getElementById('proportion').value);
+      const lossPercent = Number(document.getElementById('loss').value || 0);
+      const q = 1 - p;
+      const e = errorPercent / 100;
+
+      if (!Number.isFinite(N) || N <= 0 || !Number.isInteger(N)) {
+        showAlert('Ingrese una población válida. Debe ser un número entero mayor que cero.');
         return;
       }
 
-      const numerador = N * Math.pow(Z, 2) * p * q;
-      const denominador = Math.pow(e, 2) * (N - 1) + Math.pow(Z, 2) * p * q;
-      const n = numerador / denominador;
+      if (!Number.isFinite(errorPercent) || errorPercent <= 0 || errorPercent > 50) {
+        showAlert('Ingrese un margen de error válido entre 0.1% y 50%.');
+        return;
+      }
 
-      document.getElementById("resultado").innerText = `Tamaño de la muestra requerido: ${Math.ceil(n)} participantes.`;
+      if (!Number.isFinite(p) || p <= 0 || p >= 1) {
+        showAlert('Ingrese una proporción esperada válida entre 0.01 y 0.99.');
+        return;
+      }
+
+      if (!Number.isFinite(lossPercent) || lossPercent < 0 || lossPercent > 80) {
+        showAlert('El porcentaje de pérdidas debe estar entre 0% y 80%.');
+        return;
+      }
+
+      const numerator = N * Math.pow(Z, 2) * p * q;
+      const denominator = Math.pow(e, 2) * (N - 1) + Math.pow(Z, 2) * p * q;
+      const n = numerator / denominator;
+      const roundedN = Math.ceil(n);
+      const adjustedN = Math.ceil(roundedN / (1 - lossPercent / 100));
+
+      sampleSize.textContent = formatNumber(adjustedN);
+
+      if (lossPercent > 0) {
+        resultText.textContent = `Muestra base: ${formatNumber(roundedN)}. Muestra ajustada por ${lossPercent}% de pérdidas: ${formatNumber(adjustedN)} participantes.`;
+      } else {
+        resultText.textContent = `Se requiere una muestra mínima de ${formatNumber(roundedN)} participantes.`;
+      }
+
+      addStep('Población (N)', formatNumber(N));
+      addStep('Nivel de confianza (Z)', Z.toFixed(3));
+      addStep('Margen de error (e)', `${errorPercent}%`);
+      addStep('Proporción esperada (p)', p.toFixed(2));
+      addStep('Complemento (q)', q.toFixed(2));
+      addStep('Muestra calculada sin redondeo', n.toFixed(2));
+      addStep('Muestra mínima redondeada', formatNumber(roundedN));
+
+      if (lossPercent > 0) {
+        addStep('Muestra ajustada por pérdidas', formatNumber(adjustedN));
+      }
     }
+
+    function resetCalculator() {
+      form.reset();
+      clearAlert();
+      steps.innerHTML = '';
+      sampleSize.textContent = '—';
+      resultText.textContent = 'Complete los datos y presione calcular.';
+    }
+
+    form.addEventListener('submit', calculateSample);
+    resetBtn.addEventListener('click', resetCalculator);
   </script>
 </body>
 </html>
